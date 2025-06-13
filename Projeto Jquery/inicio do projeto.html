@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Projeto jQuery Completo</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 1º Alterar texto -->
+  <h2>1º Alterar texto</h2>
+  <button id="botaoTexto">Clique aqui</button>
+  <p id="mensagem">Texto original</p>
+
+  <hr>
+
+  <!-- 2º Mostrar e esconder elementos -->
+  <h2>2º Mostrar e esconder elementos</h2>
+  <button id="esconderImg">Esconder imagem</button>
+  <button id="mostrarImg">Mostrar imagem</button>
+  <br><br>
+  <img id="foto" src="Rei.png" alt="Exemplo">
+
+  <hr>
+
+  <!-- 3º Alterar o estilo CSS -->
+  <h2>3º Alterar o estilo CSS</h2>
+  <p id="textoHover">Passe o mouse aqui</p>
+
+  <hr>
+
+  <!-- 4º Adicionar elementos dinamicamente -->
+  <h2>4º Adicionar elementos dinamicamente</h2>
+  <button id="adicionarItem">Adicionar item</button>
+  <ul id="lista">
+    <li>Item 1</li>
+    <li>Item 2</li>
+  </ul>
+
+  <hr>
+
+  <!-- 5º Validar um formulário simples -->
+  <h2>5º Validar um formulário simples</h2>
+  <form id="formulario">
+    <input type="text" id="nome" placeholder="Digite seu nome">
+    <button type="submit">Enviar</button>
+    <p id="erro" style="color: red; display: none;">Por favor, preencha o nome.</p>
+  </form>
+
+  <hr>
+
+  <!-- 6º Requisição GET -->
+  <h2>6º Requisição GET</h2>
+  <button id="carregarUsuario">Carregar usuário</button>
+  <p id="usuarioNome"></p>
+
+  <hr>
+
+  <!-- 7º Carregar lista de posts via Ajax -->
+  <h2>7º Carregar lista de posts via Ajax</h2>
+  <button id="carregarPosts">Carregar posts</button>
+  <ul id="listaPosts"></ul>
+
+  <hr>
+
+  <!-- 8º Enviar dados via Ajax (POST) -->
+  <h2>8º Enviar dados via Ajax (POST)</h2>
+  <form id="formComentario">
+    <input type="text" id="nomeComentario" placeholder="Seu nome">
+    <br><br>
+    <textarea id="textoComentario" placeholder="Seu comentário"></textarea>
+    <br><br>
+    <button type="submit">Enviar</button>
+  </form>
+  <p id="status"></p>
+
+  <script>
+    // 1º Alterar texto
+    $('#botaoTexto').click(function() {
+      $('#mensagem').text("Texto alterado com jQuery!");
+    });
+
+    // 2º Mostrar e esconder elementos
+    $('#esconderImg').click(function() {
+      $('#foto').hide();
+    });
+    $('#mostrarImg').click(function() {
+      $('#foto').show();
+    });
+
+    // 3º Alterar o estilo CSS
+    $('#textoHover').mouseenter(function() {
+      $(this).css({'color': 'white', 'background-color': 'blue', 'padding': '10px'});
+    }).mouseleave(function() {
+      $(this).css({'color': 'black', 'background-color': '', 'padding': '0'});
+    });
+
+    // 4º Adicionar elementos dinamicamente
+    $('#adicionarItem').click(function() {
+      $('#lista').append('<li>Novo item adicionado</li>');
+    });
+
+    // 5º Validar um formulário simples
+    $('#formulario').submit(function(event) {
+      event.preventDefault();
+      var nome = $('#nome').val();
+      if (nome.trim() === '') {
+        $('#erro').show();
+      } else {
+        $('#erro').hide();
+        alert("Formulário enviado com sucesso! Nome: " + nome);
+      }
+    });
+
+    // 6º Requisição GET
+    $('#carregarUsuario').click(function() {
+      $.get('https://jsonplaceholder.typicode.com/users/1', function(data) {
+        $('#usuarioNome').text("Usuário: " + data.name);
+      });
+    });
+
+    // 7º Carregar lista de posts via Ajax
+    $('#carregarPosts').click(function() {
+      $.get('https://jsonplaceholder.typicode.com/posts', function(data) {
+        $('#listaPosts').empty();
+        for (var i = 0; i < 5; i++) {
+          $('#listaPosts').append('<li>' + data[i].title + '</li>');
+        }
+      });
+    });
+
+    // 8º Enviar dados via Ajax (POST)
+    $('#formComentario').submit(function(event) {
+      event.preventDefault();
+      var nome = $('#nomeComentario').val();
+      var comentario = $('#textoComentario').val();
+
+      $.ajax({
+        url: 'https://jsonplaceholder.typicode.com/comments',
+        type: 'POST',
+        data: JSON.stringify({
+          name: nome,
+          body: comentario
+        }),
+        contentType: 'application/json; charset=UTF-8',
+        success: function(response) {
+          $('#status').text("Comentário enviado com sucesso! ID gerado: " + response.id);
+        },
+        error: function() {
+          $('#status').text("Erro ao enviar comentário.");
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
